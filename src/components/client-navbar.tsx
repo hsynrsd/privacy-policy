@@ -1,20 +1,44 @@
-import Link from 'next/link'
-import { createClient } from '../../supabase/server'
-import { Button } from './ui/button'
-import { User, UserCircle } from 'lucide-react'
-import UserProfile from './user-profile'
+"use client";
 
-export default async function Navbar() {
-  const supabase = createClient()
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { Button } from './ui/button';
+import { createClient } from '../../supabase/client';
+import UserProfile from './user-profile';
+import { User } from '@supabase/supabase-js';
 
-  const { data: { user } } = await (await supabase).auth.getUser()
+export default function ClientNavbar() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const checkUser = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+      setLoading(false);
+    };
+    
+    checkUser();
+  }, []);
+
+  if (loading) {
+    return (
+      <nav className="w-full border-b border-gray-200 bg-white py-2">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <Link href="/" prefetch className="text-xl font-bold">
+            Pulsevera
+          </Link>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="w-full border-b border-gray-200 bg-white py-2">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link href="/" prefetch className="text-xl font-bold">
-        Pulsevera
+          Pulsevera
         </Link>
         <div className="flex gap-4 items-center">
           {user ? (
@@ -27,7 +51,7 @@ export default async function Navbar() {
                   Dashboard
                 </Button>
               </Link>
-              <UserProfile  />
+              <UserProfile />
             </>
           ) : (
             <>
@@ -48,5 +72,5 @@ export default async function Navbar() {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+} 
