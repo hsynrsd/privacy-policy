@@ -1,24 +1,27 @@
-export type Message =
-  | { success: string }
-  | { error: string }
-  | { message: string };
+export type Message = {
+  type: "success" | "error";
+  text: string;
+};
 
-export function FormMessage({ message }: { message: Message }) {
+type FormMessageProps = {
+  message: Message;
+  role?: string;
+  "aria-live"?: "polite" | "assertive" | "off";
+};
+
+export function FormMessage({ message, role = "alert", "aria-live": ariaLive = "polite" }: FormMessageProps) {
+  const styles = {
+    success: "bg-green-50 text-green-800 dark:bg-green-900/50 dark:text-green-300",
+    error: "bg-red-50 text-red-800 dark:bg-red-900/50 dark:text-red-300",
+  };
+
   return (
-    <div className="flex flex-col gap-2 w-full max-w-md text-sm">
-      {"success" in message && (
-        <div className="text-green-500 border-l-2 border-green-500 px-4">
-          {message.success}
-        </div>
-      )}
-      {"error" in message && (
-        <div className="text-red-500 border-l-2 border-red-500 px-4">
-          {message.error}
-        </div>
-      )}
-      {"message" in message && (
-        <div className="text-foreground border-l-2 px-4">{message.message}</div>
-      )}
+    <div 
+      className={`p-4 rounded-md ${styles[message.type]}`}
+      role={role}
+      aria-live={ariaLive}
+    >
+      {message.text}
     </div>
   );
 }

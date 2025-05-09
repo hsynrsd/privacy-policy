@@ -141,25 +141,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 bg-blue-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold mb-2">10,000+</div>
-              <div className="text-blue-100">Policies Generated</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">99%</div>
-              <div className="text-blue-100">Compliance Rate</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold mb-2">15+</div>
-              <div className="text-blue-100">Supported Regulations</div>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Pricing Section */}
       <section className="py-24 bg-white" id="pricing">

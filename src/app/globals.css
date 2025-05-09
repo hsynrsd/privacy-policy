@@ -96,4 +96,137 @@
   .btn-secondary {
     @apply inline-flex items-center px-6 py-3 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors;
   }
+  
+  /* New animation classes */
+  .fade-in {
+    @apply opacity-0 animate-[fadeIn_0.3s_ease-in_forwards];
+  }
+  
+  .slide-in {
+    @apply transform translate-y-4 opacity-0 animate-[slideIn_0.3s_ease-out_forwards];
+  }
+  
+  .pulse {
+    @apply animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite];
+  }
+  
+  .bounce-in {
+    @apply transform scale-95 opacity-0 animate-[bounceIn_0.3s_ease-out_forwards];
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Add smooth transitions */
+.transition-all {
+  @apply transition-[all] duration-300 ease-in-out;
+}
+
+.hover-lift {
+  @apply transition-transform duration-200 hover:-translate-y-0.5;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-200 hover:shadow-lg hover:shadow-blue-100/50;
+}
+
+/* Add form field animations */
+.form-field-enter {
+  @apply opacity-0 -translate-y-2;
+}
+
+.form-field-enter-active {
+  @apply opacity-100 translate-y-0 transition-all duration-300 ease-out;
+}
+
+.form-field-exit {
+  @apply opacity-100;
+}
+
+.form-field-exit-active {
+  @apply opacity-0 translate-y-2 transition-all duration-300 ease-in;
+}
+
+/* Add accordion animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* Add collapsible section styles */
+.section-header {
+  @apply flex items-center justify-between w-full py-2 text-left transition-colors hover:bg-gray-50;
+}
+
+.section-content {
+  @apply overflow-hidden transition-all;
+}
+
+.section-content[data-state='open'] {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.section-content[data-state='closed'] {
+  animation: accordion-up 0.2s ease-out;
+}
+
+.section-chevron {
+  @apply h-4 w-4 shrink-0 transition-transform duration-200;
+}
+
+.section-chevron[data-state='open'] {
+  @apply rotate-180;
 }

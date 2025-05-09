@@ -218,6 +218,7 @@ export class PrivacyPolicyGenerator {
         "Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the Site.",
         "We reserve the right to make changes to this Privacy Policy at any time and for any reason. We will alert you about any changes by updating the 'Last Updated' date of this Privacy Policy.",
         `You are encouraged to periodically review this Privacy Policy to stay informed of updates. You will be deemed to have been made aware of, will be subject to, and will be deemed to have accepted the changes in any revised Privacy Policy by your continued use of the Site after the date such revised Privacy Policy is posted.`,
+        `Our Site is not intended for individuals under the age of ${this.formData.minimumAge || "13"} ${this.formData.parentalConsentRequired ? "without parental consent" : ""}, and we do not knowingly collect personal data from children.`,
       ],
     };
   }
@@ -271,37 +272,34 @@ export class PrivacyPolicyGenerator {
     const content = [];
     const usageTypes = [];
 
-    if (this.formData.usesForServices)
-      usageTypes.push(
-        "To provide and maintain our Site, including to monitor the usage of our Site",
-      );
-    if (this.formData.usesForMarketing)
-      usageTypes.push(
-        "For marketing and promotional purposes, such as to send you news and newsletters, special offers, and promotions",
-      );
-    if (this.formData.usesForCommunication)
-      usageTypes.push(
-        "To communicate with you, including for customer service, to respond to your inquiries, and to send you updates about our Site",
-      );
-    if (this.formData.usesForLegal)
-      usageTypes.push(
-        "To comply with legal obligations and resolve any disputes",
-      );
-    if (this.formData.usesForAnalytics)
-      usageTypes.push(
-        "To analyze trends, administer the Site, track users' movements around the Site, and gather demographic information",
-      );
-    if (this.formData.usesForOther && this.formData.usesForOtherSpecify) {
-      usageTypes.push(this.formData.usesForOtherSpecify);
-    }
+    if (this.formData.collectsPersonalInfo) {
+      if (this.formData.dataUsagePurposes.userCommunication) {
+        usageTypes.push("To communicate with users, including sending emails, notifications, and providing customer support");
+      }
+      if (this.formData.dataUsagePurposes.paymentProcessing) {
+        usageTypes.push("To process payments, handle billing, and manage subscriptions");
+      }
+      if (this.formData.dataUsagePurposes.analytics) {
+        usageTypes.push("To analyze usage patterns and track site performance to improve our services");
+      }
+      if (this.formData.dataUsagePurposes.serviceImprovement) {
+        usageTypes.push("To enhance and improve our features, functionality, and user experience");
+      }
+      if (this.formData.dataUsagePurposes.marketing) {
+        usageTypes.push("To send marketing and promotional communications");
+      }
+      if (this.formData.dataUsagePurposes.other && this.formData.dataUsageOtherSpecify) {
+        usageTypes.push(this.formData.dataUsageOtherSpecify);
+      }
 
-    if (usageTypes.length > 0) {
-      content.push(
-        "We may use the information we collect from you for the following purposes:",
-      );
-      content.push(usageTypes.join("; ") + ".");
+      if (usageTypes.length > 0) {
+        content.push("We use the information we collect from you for the following purposes:");
+        content.push(usageTypes.join("; ") + ".");
+      } else {
+        content.push("We collect personal information but have not specified any usage purposes. Please contact us for more information about how we use your data.");
+      }
     } else {
-      content.push("We do not use any collected information for any purpose.");
+      content.push("We do not collect personal information, therefore we do not use your data for any purpose.");
     }
 
     return {
@@ -379,11 +377,34 @@ export class PrivacyPolicyGenerator {
 
     if (this.formData.storesDataIndefinitely) {
       content.push(
-        "We store your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy.",
+        "We store your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law.",
+      );
+    } else if (this.formData.dataRetentionPeriods) {
+      const periods = [];
+      if (this.formData.dataRetentionPeriods.accountData) {
+        periods.push(`account data for ${this.formData.dataRetentionPeriods.accountData}`);
+      }
+      if (this.formData.dataRetentionPeriods.transactionData) {
+        periods.push(`transaction records for ${this.formData.dataRetentionPeriods.transactionData}`);
+      }
+      if (this.formData.dataRetentionPeriods.communicationHistory) {
+        periods.push(`communication history for ${this.formData.dataRetentionPeriods.communicationHistory}`);
+      }
+      if (this.formData.dataRetentionPeriods.analyticsData) {
+        periods.push(`analytics data for ${this.formData.dataRetentionPeriods.analyticsData}`);
+      }
+      
+      if (periods.length > 0) {
+        content.push("We retain different types of personal information for varying periods:");
+        content.push(periods.join("; ") + ".");
+      }
+      
+      content.push(
+        "For any data not specifically mentioned above, we retain personal information only as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required or permitted by law.",
       );
     } else {
       content.push(
-        `We retain your personal information for ${this.formData.dataRetentionPeriod || "a limited period of time"}.`,
+        "We retain personal information only as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required or permitted by law.",
       );
     }
 
@@ -407,26 +428,29 @@ export class PrivacyPolicyGenerator {
       content.push(
         "Cookies are files with a small amount of data which may include an anonymous unique identifier. Cookies are sent to your browser from a website and stored on your device.",
       );
+      content.push(
+        "Where required by law, we obtain your consent before using cookies or similar tracking technologies.",
+      );
 
       const cookieTypes = [];
-      if (this.formData.usesEssentialCookies)
+      if (this.formData.cookieTypes.essential)
         cookieTypes.push(
           "Essential cookies that are necessary for the Site to function properly",
         );
-      if (this.formData.usesAnalyticsCookies)
+      if (this.formData.cookieTypes.functional)
+        cookieTypes.push(
+          "Functional cookies that remember your preferences and customize your experience",
+        );
+      if (this.formData.cookieTypes.analytics)
         cookieTypes.push(
           "Analytics cookies that help us understand how you use our Site",
         );
-      if (this.formData.usesAdvertisingCookies)
+      if (this.formData.cookieTypes.advertising)
         cookieTypes.push(
           "Advertising cookies that are used to deliver relevant ads to you",
         );
-      if (this.formData.usesSocialCookies)
-        cookieTypes.push(
-          "Social media cookies that enable you to share content from our Site",
-        );
-      if (this.formData.usesOtherCookies && this.formData.otherCookiesSpecify) {
-        cookieTypes.push(this.formData.otherCookiesSpecify);
+      if (this.formData.cookieTypes.other && this.formData.cookieOtherSpecify) {
+        cookieTypes.push(this.formData.cookieOtherSpecify);
       }
 
       if (cookieTypes.length > 0) {
@@ -460,11 +484,16 @@ export class PrivacyPolicyGenerator {
         "You have the right to access, update, or delete your personal information that we have collected.",
       );
       content.push(
-        `To exercise these rights, you can ${this.formData.userRightsProcess || "contact us using the information provided in the Contact Information section"}.`,
+        `To exercise these rights, you can ${this.formData.userRightsProcess || `contact us at ${this.formData.contactEmail} with the subject line 'Privacy Request'`}.`,
       );
-    } else {
+    }
+
+    if (this.formData.compliesWithGDPR || this.formData.compliesWithCCPA) {
       content.push(
-        "We respect your privacy rights and will work with you to address any concerns you may have about your personal information.",
+        `To exercise any of your rights under the ${[
+          this.formData.compliesWithGDPR ? "GDPR" : "",
+          this.formData.compliesWithCCPA ? "CCPA" : "",
+        ].filter(Boolean).join(" or ")}, please contact us at ${this.formData.contactEmail} with the subject line 'Privacy Request'.`,
       );
     }
 
@@ -531,12 +560,39 @@ export class PrivacyPolicyGenerator {
   }
 
   private generatePolicyChanges(): { heading: string; content: string[] } {
+    const content = [];
+    
+    content.push(
+      `We may update our Privacy Policy from time to time. We will notify you of any changes by ${this.formData.notificationMethod || "posting the new Privacy Policy on this page"}.`
+    );
+
+    const notificationMethods = [];
+    if (this.formData.policyUpdateNotification.email) {
+      notificationMethods.push("email (if you've provided it)");
+    }
+    if (this.formData.policyUpdateNotification.siteNotice) {
+      notificationMethods.push("a prominent notice on our Site");
+    }
+    if (this.formData.policyUpdateNotification.popup) {
+      notificationMethods.push("a pop-up notification");
+    }
+    if (this.formData.policyUpdateNotification.other && this.formData.policyUpdateNotificationOther) {
+      notificationMethods.push(this.formData.policyUpdateNotificationOther);
+    }
+
+    if (notificationMethods.length > 0) {
+      content.push(
+        `We will inform you about significant changes via ${notificationMethods.join(" or ")}.`
+      );
+    }
+
+    content.push(
+      `Changes to this Privacy Policy will take effect ${this.formData.gracePeriod ? `after a grace period of ${this.formData.gracePeriod}` : "immediately upon posting"}.`
+    );
+
     return {
       heading: "9. Changes to This Privacy Policy",
-      content: [
-        `We may update our Privacy Policy from time to time. We will notify you of any changes by ${this.formData.notificationMethod || "posting the new Privacy Policy on this page"}.`,
-        `Changes to this Privacy Policy are effective when they are posted on this page and will take effect ${this.formData.effectiveDate || "immediately upon posting"}.`,
-      ],
+      content,
     };
   }
 

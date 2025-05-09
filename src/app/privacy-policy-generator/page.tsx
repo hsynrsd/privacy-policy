@@ -44,7 +44,8 @@ export default function PrivacyPolicyGeneratorPage() {
           const policiesResult = await getUserPolicies(user.id);
           if (policiesResult.success && policiesResult.policies && policiesResult.policies.length >= 1) {
             setMessage({
-              error: "Free tier is limited to one policy. Please upgrade your plan to create more."
+              type: "error",
+              text: "Free tier is limited to one policy. Please upgrade your plan to create more."
             });
             // Optional: Redirect to pricing or dashboard after a delay
             setTimeout(() => {
@@ -69,7 +70,10 @@ export default function PrivacyPolicyGeneratorPage() {
 
       setGeneratedPolicy(policy);
       setFormData(data);
-      setMessage({ success: "Privacy policy generated successfully!" });
+      setMessage({
+        type: "success",
+        text: "Privacy policy generated successfully!"
+      });
 
       // Scroll to the generated policy
       setTimeout(() => {
@@ -81,7 +85,8 @@ export default function PrivacyPolicyGeneratorPage() {
     } catch (error) {
       console.error("Error generating policy:", error);
       setMessage({
-        error: "Failed to generate privacy policy. Please try again.",
+        type: "error",
+        text: "Failed to generate privacy policy. Please try again."
       });
     } finally {
       setIsLoading(false);
@@ -110,10 +115,10 @@ export default function PrivacyPolicyGeneratorPage() {
             filling out the form below.
           </p>
 
-          {message && 'error' in message && message.error.includes("Free tier is limited") ? (
+          {message && message.type === "error" && message.text.includes("Free tier is limited") ? (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 rounded-md p-4 mb-8">
               <p className="text-yellow-800 dark:text-yellow-200">
-                {message.error}
+                {message.text}
               </p>
               <div className="mt-4">
                 <a
