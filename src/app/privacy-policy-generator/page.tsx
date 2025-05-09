@@ -14,6 +14,7 @@ import { checkUserSubscription, getUserPolicies } from "@/app/actions";
 import { createClient } from "../../../supabase/client";
 import ClientNavbar from "@/components/client-navbar";
 import { useRouter } from "next/navigation";
+import { Message } from "@/components/form-message";
 
 export default function PrivacyPolicyGeneratorPage() {
   const [generatedPolicy, setGeneratedPolicy] =
@@ -21,11 +22,7 @@ export default function PrivacyPolicyGeneratorPage() {
   const [formData, setFormData] = useState<PolicyFormData | null>(null);
   const [isPaidUser, setIsPaidUser] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [message, setMessage] = useState<{
-    success?: string;
-    error?: string;
-    message?: string;
-  } | null>(null);
+  const [message, setMessage] = useState<Message | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -113,7 +110,7 @@ export default function PrivacyPolicyGeneratorPage() {
             filling out the form below.
           </p>
 
-          {message?.error && message.error.includes("Free tier is limited") ? (
+          {message && 'error' in message && message.error.includes("Free tier is limited") ? (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 rounded-md p-4 mb-8">
               <p className="text-yellow-800 dark:text-yellow-200">
                 {message.error}

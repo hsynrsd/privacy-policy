@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FormMessage } from "@/components/form-message";
+import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
@@ -178,7 +178,7 @@ const CheckboxField = ({ id, label, control, name }: CheckboxFieldProps) => {
 
 type PrivacyPolicyFormProps = {
   onSubmit: (data: PolicyFormData) => void;
-  message?: { success?: string; error?: string; message?: string };
+  message?: Message;
 };
 
 export function PrivacyPolicyForm({

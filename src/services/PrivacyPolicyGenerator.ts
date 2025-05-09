@@ -133,7 +133,6 @@ export class PrivacyPolicyGenerator {
   }
 
   public async generateDOCX(policy: GeneratedPolicy): Promise<Blob> {
-    const doc = new Document();
     const children = [];
 
     // Title
@@ -202,8 +201,10 @@ export class PrivacyPolicyGenerator {
       );
     }
 
-    doc.addSection({
-      children: children,
+    const doc = new Document({
+      sections: [{
+        children: children,
+      }],
     });
 
     return await Packer.toBlob(doc);
